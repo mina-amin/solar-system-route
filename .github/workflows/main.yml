@@ -14,7 +14,7 @@ env:
 
 jobs:
   unit-tests:
-    name: Run Unit Tests
+    name: Run Unit Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
