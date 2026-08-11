@@ -97,7 +97,7 @@ jobs:
         with:
           context: .
           push: false
-          tags: ${{ vars.DOCKER_USERNAME }}/solar-system-route:${{ github.sha }}
+          tags: ${{ vars.DOCKER_USERNAME }}/solar-system-route:${{ github.short_sha }}
       
       - name: Docker Image test
         run: |
@@ -107,7 +107,7 @@ jobs:
            -e MONGO_URI=${{ env.MONGO_URI }} \
            -e MONGO_USERNAME=${{ env.MONGO_USERNAME }} \
            -e MONGO_PASSWORD=${{ env.MONGO_PASSWORD }} \
-           ${{ vars.DOCKER_USERNAME }}/solar-system-route:${{ github.sha }}
+           ${{ vars.DOCKER_USERNAME }}/solar-system-route:${{ github.short_sha }}
            sleep 5
            docker ps
            export IP_ADDRESS=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-route)
