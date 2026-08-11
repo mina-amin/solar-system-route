@@ -112,4 +112,4 @@ jobs:
            docker ps
            export IP_ADDRESS=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-route)
            echo $IP_ADDRESS
-           wget http://127.0.0.1:3000/live | grep live
+           wget -q -O - http://127.0.0.1:3000/live | grep live
