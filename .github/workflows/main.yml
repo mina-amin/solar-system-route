@@ -101,7 +101,7 @@ jobs:
       - name: Docker Image test
         run: |
           docker images
-          docker run --name solar-system-route-test -d \
+          docker run --name solar-system-route -d \
            -p 3000:3000 \
            -e MONGO_URI=${{ env.MONGO_URI }} \
            -e MONGO_USERNAME=${{ env.MONGO_USERNAME }} \   
