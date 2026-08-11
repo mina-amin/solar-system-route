@@ -75,7 +75,8 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           name: coverage-results
-          path: coverage.xml
+          path: |
+            ./coverage
 
   docker:
     name: Docker Build and Push
@@ -101,12 +102,12 @@ jobs:
       - name: Docker Image test
         run: |
           docker images
-          docker run --name solar-system-route -d \
+          docker run --name solar-system-route \
            -p 3000:3000 \
            -e MONGO_URI=${{ env.MONGO_URI }} \
            -e MONGO_USERNAME=${{ env.MONGO_USERNAME }} \   
            -e MONGO_PASSWORD=${{ env.MONGO_PASSWORD }} \
            ${{ vars.DOCKER_USERNAME }}/solar-system-route:${{ github.sha }}
-           export IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-route-test)
+           export IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-route)
            echo "Container IP: $IP"
            wget -qO- http://$IP:3000/live | grep "live"
