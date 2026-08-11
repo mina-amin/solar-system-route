@@ -102,13 +102,13 @@ jobs:
       - name: Docker Image test
         run: |
           docker images
-          docker run --name solar-system-route \
+          docker run --name solar-system-route -d \
            -p 3000:3000 \
            -e MONGO_URI=${{ env.MONGO_URI }} \
            -e MONGO_USERNAME=${{ env.MONGO_USERNAME }} \
            -e MONGO_PASSWORD=${{ env.MONGO_PASSWORD }} \
-           -d ${{ vars.DOCKER_USERNAME }}/solar-system-route:${{ github.sha }}
+           ${{ vars.DOCKER_USERNAME }}/solar-system-route:${{ github.sha }}
            sleep 5
-           export IP_ADDRESS=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${{vars.DOCKER_USERNAME}}/solar-system-route)
+           export IP_ADDRESS=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-route)
            echo $IP_ADDRESS
            wget http://127.0.0.1:3000/live | grep live
