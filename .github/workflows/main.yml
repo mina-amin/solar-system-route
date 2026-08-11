@@ -15,7 +15,14 @@ env:
 jobs:
   unit-tests:
     name: Run Unit Test
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18,20,24]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    
+    runs-on: ${{ matrix.os }}
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.1
@@ -27,10 +34,43 @@ jobs:
       - name: node installation
         uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version: ${{ matrix.node-version }}
 
       - name: Install npm dependencies
         run: npm install
       
       - name: Run tests
         run: npm test
+
+      - name: archive results
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: test-results
+          path: |
+            ./test-results.xml
+
+  code-coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+      
+      - name: node installation
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install npm dependencies
+        run: npm install
+      
+      - name: Run code coverage
+        run: npm run coverage
+
+      - name: archive results
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: coverage-results
+          path: |
+            ./coverage-tests.xml
