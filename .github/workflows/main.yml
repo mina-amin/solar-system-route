@@ -110,4 +110,4 @@ jobs:
            ${{ vars.DOCKER_USERNAME }}/solar-system-route:${{ github.sha }}
            export IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-route)
            echo "Container IP: $IP"
-           wget -qO- http://$IP:3000/live | grep "live"
+           wget -qO- http://127.0.0.1:3000/live | grep "live"
