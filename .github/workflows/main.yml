@@ -1,4 +1,4 @@
-name: Solar System Route
+name: Solar System Route-CI
 
 on:
   workflow_dispatch:
