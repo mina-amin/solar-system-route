@@ -110,4 +110,4 @@ jobs:
            -d ${{ vars.DOCKER_USERNAME }}/solar-system-route:${{ github.sha }}
            export IP_ADDRESS=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${{vars.DOCKER_USERNAME}}/solar-system-route)
            echo $IP_ADDRESS
-           wget http://$IP_ADDRESS:3000/live | grep live
+           wget http://127.0.0.1:3000/live | grep live
