@@ -6,7 +6,12 @@ on:
     branches:
       - feature/solar-system-route
       - main
-  
+
+env:
+  MONGODB_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
+  MONGODB_USERNAME: ${{ var.MONGODB_USERNAME }}
+  MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+
 jobs:
   unit-tests:
     name: Run Unit Tests
