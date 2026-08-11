@@ -1,0 +1,31 @@
+name: Solar System Route
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/solar-system-route
+      - main
+  
+jobs:
+  unit-tests:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+      
+      - name: Run Unit Tests
+        run: |
+          echo "Running unit tests..."
+      
+      - name: node installation
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Install npm dependencies
+        run: npm install
+      
+      - name: Run tests
+        run: npm test
