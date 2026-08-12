@@ -141,7 +141,7 @@ jobs:
       - name: install terraform
         uses: hashicorp/setup-terraform@v4
         with:
-          terraform_version: "1.7.6"
+          terraform_version: 1.6.7
 
 
       - name: initalize terraform
