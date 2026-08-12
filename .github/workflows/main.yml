@@ -114,10 +114,10 @@ jobs:
            echo $IP_ADDRESS
            wget -q -O - http://127.0.0.1:3000/live | grep live
       
-      - name: Build and push
+      - name: Build and Push Docker Image
         uses: docker/build-push-action@v7
         with:
-            context: .
-            push: true
-            tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system-c3:${{ github.sha }}     
+          context: .
+          push: false
+          tags: ${{ vars.DOCKER_USERNAME }}/solar-system-route:${{ github.sha }} 
     
