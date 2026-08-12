@@ -104,9 +104,9 @@ jobs:
           docker images
           docker run --name solar-system-route -d \
            -p 3000:3000 \
-           -e MONGO_URI=${{ env.MONGO_URI }} \
-           -e MONGO_USERNAME=${{ env.MONGO_USERNAME }} \
-           -e MONGO_PASSWORD=${{ env.MONGO_PASSWORD }} \
+           -e MONGO_URI='mongodb+srv://supercluster.d83jj.mongodb.net/superData' \
+           -e MONGO_USERNAME=${{ vars.MONGODB_USERNAME }} \
+           -e MONGO_PASSWORD=${{ secrets.MONGODB_PASSWORD }} \
            ${{ vars.DOCKER_USERNAME }}/solar-system-route:${{ github.sha }}
            sleep 5
            docker ps
@@ -114,7 +114,7 @@ jobs:
            echo $IP_ADDRESS
            wget -q -O - http://127.0.0.1:3000/live | grep live
       
-      - name: Build and Push Docker Image
+      - name: Push Docker Image
         uses: docker/build-push-action@v7
         with:
           context: .
