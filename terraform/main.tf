@@ -10,13 +10,11 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1a"
+  region = "us-east-1"
 }
 
-  resource "aws_vpc" "vpc" {
-    description = "CIDR block for the VPC"
-    type        = string
-    default     = "10.0.0.0/16"
+resource "aws_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
 
   tags = {
     Name = "vpc"
@@ -24,7 +22,7 @@ provider "aws" {
 }
 
 resource "aws_subnet" "subnet" {
-  count = 2
+  count                   = 2
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = cidrsubnet(aws_vpc.vpc.cidr_block, 8, count.index)
   availability_zone       = element(["us-east-1a", "us-east-1b"], count.index)
@@ -34,7 +32,6 @@ resource "aws_subnet" "subnet" {
     Name = "subnet-${count.index}"
   }
 }
-
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
@@ -57,26 +54,22 @@ resource "aws_route_table" "route" {
   }
 }
 
-
-
 resource "aws_route_table_association" "public_subnet" {
-  count          = 1
+  count          = length(aws_subnet.subnet)
   subnet_id      = aws_subnet.subnet[count.index].id
   route_table_id = aws_route_table.route.id
 }
 
-
-
 resource "aws_security_group" "sg" {
   name        = "sg"
   description = "eks security group"
-  vpc_id = aws_vpc.vpc.id
+  vpc_id      = aws_vpc.vpc.id
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -85,6 +78,34 @@ resource "aws_security_group" "sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "sg"
+  }
+}
+
+resource "aws_iam_role" "iam_role" {
+  name = "eks-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "worker_node_policy" {
@@ -100,21 +121,4 @@ resource "aws_iam_role_policy_attachment" "cni_policy" {
 resource "aws_iam_role_policy_attachment" "ecr_readonly" {
   role       = aws_iam_role.iam_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-}
-
-resource "aws_iam_role" "iam_role" {
-  name = "eks-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action    = "sts:AssumeRole"
-        Effect    = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      }
-    ]
-  })
 }
