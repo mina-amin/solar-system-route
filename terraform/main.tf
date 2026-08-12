@@ -14,7 +14,9 @@ provider "aws" {
 }
 
   resource "aws_vpc" "vpc" {
-  cidr_block = var.vpc_cidr
+    description = "CIDR block for the VPC"
+    type        = string
+    default     = "10.0.0.0/16"
 
   tags = {
     Name = "vpc"
