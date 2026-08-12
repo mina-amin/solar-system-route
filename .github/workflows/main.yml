@@ -126,6 +126,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: docker
     steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::123456789012:role/github-actions
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --name my-cluster \
+            --region us-east-1
+
+      - name: Test cluster
+        run: |
+          kubectl get nodes
+          
       - name: Checkout
         uses: actions/checkout@v7.0.1
       
