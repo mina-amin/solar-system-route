@@ -10,7 +10,7 @@ terraform {
 }
 
 provider "aws" {
-  region = us-east-1
+  region = "us-east-1"
 }
 
   resource "aws_vpc" "vpc" {
@@ -83,6 +83,21 @@ resource "aws_security_group" "sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_iam_role_policy_attachment" "worker_node_policy" {
+  role       = aws_iam_role.iam_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "cni_policy" {
+  role       = aws_iam_role.iam_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_readonly" {
+  role       = aws_iam_role.iam_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "aws_iam_role" "iam_role" {
