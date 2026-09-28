@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  name: solar-system-ingress
+spec:
+  rules:
+  - host: ${{ vars.SOLAR_SYSTEM_ROUTE_HOST }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: solar-system
+            port:
+              number: 3000
